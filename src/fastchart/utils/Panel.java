@@ -1,4 +1,4 @@
-package lwjglTests.chart;
+package fastchart.utils;
 
 public interface Panel {
 

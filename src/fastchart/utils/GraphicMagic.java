@@ -1,12 +1,10 @@
-package lwjglTests.chart;
+package fastchart.utils;
 
-import java.awt.geom.Point2D;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-
-import lwjglTests.chart.Serie;
-import lwjglTests.chart.SeriesPrinter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Sys;
@@ -19,13 +17,16 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.system.MemoryUtil;
 
-public class TestGraphycs2d {
+public class GraphicMagic implements Runnable{
+
 	// We need to strongly reference callback instances.
 	private GLFWErrorCallback errorCallback;
 	private GLFWKeyCallback keyCallback;
 
 	// The window handle
 	private long window;
+	
+	List<Panel> panels = new ArrayList<>();
 
 	static {
 
@@ -55,6 +56,13 @@ public class TestGraphycs2d {
 		}
 	}
 
+	public void addPanel(Panel p){
+		synchronized (panels) {
+			panels.add(p);
+		}
+	}
+	
+	@Override
 	public void run() {
 		System.out.println("Hello LWJGL " + Sys.getVersion() + "!");
 
@@ -133,15 +141,7 @@ public class TestGraphycs2d {
 		// the window or has pressed the ESCAPE key.
 		double halfSpace = 1;
 
-		int time = 0;
-
-		final Serie s = new Serie();
-		s.addPoint(new Point2D.Double(time, time % 2 == 0 ? time : -time));
-
-		Serie s2 = new Serie();
-		s2.addPoint(new Point2D.Double(time, time % 2 == 0 ? time : -time));
-
-		SeriesPrinter pr = new SeriesPrinter();
+		int fps = 0;
 
 		int oldWidth = 0;
 		int oldHeight = 0;
@@ -149,8 +149,8 @@ public class TestGraphycs2d {
 		double left = -halfSpace;
 		double right = halfSpace;
 		double bottom = -halfSpace;
-		double top = halfSpace;	
-		
+		double top = halfSpace;
+
 		while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE) {
 
 			IntBuffer w = BufferUtils.createIntBuffer(1);
@@ -162,7 +162,7 @@ public class TestGraphycs2d {
 			if (oldWidth != width || oldHeight != height) {
 				oldWidth = width;
 				oldHeight = height;
-				
+
 				GL11.glMatrixMode(GL11.GL_PROJECTION); // Select The Projection Matrix
 				GL11.glLoadIdentity(); // Reset The Projection Matrix
 
@@ -177,15 +177,16 @@ public class TestGraphycs2d {
 
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-			// pr.setColor(1, 0, 0);
-			// pr.draw(s, left, right, bottom, 0 );
-			pr.draw(s, left, right, bottom + 0.1, 0 - 0.1);
+			synchronized (panels) {
+				for (Panel p: panels){
+					p.draw(left, right, bottom, top);
+				}
+			}
 
-			pr.draw(s, left, right, 0 + 0.1, top - 0.1);
-			
-			if (System.currentTimeMillis() - t > 1) {
-				
-
+			fps++;
+			if (System.currentTimeMillis() - t > 1000) {
+				System.out.println("fps:"+fps);
+				fps=0;
 				t = System.currentTimeMillis();
 			}
 
@@ -197,7 +198,4 @@ public class TestGraphycs2d {
 		}
 	}
 
-	public static void main(String[] args) {
-		new TestGraphycs2d().run();
-	}
 }

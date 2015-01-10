@@ -1,7 +1,9 @@
-package lwjglTests.chart;
+package fastchart;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import fastchart.utils.Panel;
 
 public class Chart implements Panel {
 	
@@ -12,7 +14,9 @@ public class Chart implements Panel {
 	public void draw(double left, double right, double bottom, double top) {
 		
 		for(Serie s:series){
-			pr.draw(s, left, right, bottom , top);
+			synchronized (s) {
+				pr.draw(s, left, right, bottom , top);
+			}
 		}
 	}
 

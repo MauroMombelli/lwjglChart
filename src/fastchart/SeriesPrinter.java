@@ -1,4 +1,4 @@
-package lwjglTests.chart;
+package fastchart;
 
 import java.awt.geom.Point2D;
 

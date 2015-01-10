@@ -1,4 +1,4 @@
-package lwjglTests.chart;
+package fastchart;
 
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
@@ -13,11 +13,13 @@ public class Serie {
 	private final LinkedList<Point2D> list = new LinkedList<Point2D>();
 	
 	public void addPoint(Point2D p){
-		if (p != null)
-			list.addFirst(p);
-		
-		while (list.size()> size){
-			list.removeLast();
+		synchronized (this) {
+			if (p != null)
+				list.addFirst(p);
+			
+			while (list.size()> size){
+				list.removeLast();
+			}
 		}
 	}
 
