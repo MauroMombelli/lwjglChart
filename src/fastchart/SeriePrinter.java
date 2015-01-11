@@ -4,7 +4,7 @@ import java.awt.geom.Point2D;
 
 import org.lwjgl.opengl.GL11;
 
-public class SeriesPrinter {
+public class SeriePrinter {
 
 	private double[] lineColor = new double[] { 1.0, 1.0, 1.0 };
 	private double[] borderColor = new double[] { 1.0, 0.0, 1.0 };
@@ -17,26 +17,31 @@ public class SeriesPrinter {
 
 	public void draw(Serie s, int numToDraw, double minX, double maxX, double minY, double maxY, float lineWidth, double[] lineColor, double[] borderColor) {
 		if (s.size() == 0){
-			//return;
+			return;
 		}
 		GL11.glBegin(GL11.GL_LINES);
 
 		GL11.glLineWidth(lineWidth);
-		GL11.glColor3d(lineColor[0], lineColor[1], lineColor[2]);
+		
+		double[] lineColor2 = s.getLineColor();
+		GL11.glColor3d(lineColor2[0], lineColor2[1], lineColor2[2]);
 
 		double incrementX = (maxX - minX) / (numToDraw-1);
 		double actualX = maxX;
 		
 		double midY = (maxY+minY)/2.0;
-		//System.out.println("midY "+midY+" maxY "+maxY+" minY "+minY);
+		
+		double scaleY = s.getScaleY();
+		//double scaleY = Math.min(Math.min(maxY/s.maxY.doubleValue(), minY/s.minY.doubleValue()), 1);
+		//System.out.println("midY "+midY+" maxY "+maxY+" minY "+minY+" scale "+scaleY);
 
 		Point2D last = s.getLast();// this is the last point
 
 		for (int i = 1; i < Math.min(s.size(), numToDraw); i++) {
 			Point2D point2d = s.getFromBottom(i);
-			GL11.glVertex3d(actualX, ensureRanged(last.getY()+midY, minY, maxY), 0);
+			GL11.glVertex3d(actualX, ensureRanged( (last.getY()+midY)*scaleY, minY, maxY), 0);
 			actualX -= incrementX;
-			GL11.glVertex3d(actualX, ensureRanged(point2d.getY()+midY, minY, maxY), 0);
+			GL11.glVertex3d(actualX, ensureRanged( (point2d.getY()+midY)*scaleY, minY, maxY), 0);
 			last = point2d;
 		}
 		
