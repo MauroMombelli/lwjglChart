@@ -27,6 +27,7 @@ public class GraphicMagic implements Runnable{
 	private long window;
 	
 	List<Panel> panels = new ArrayList<>();
+	private String title;
 
 	static {
 
@@ -56,6 +57,10 @@ public class GraphicMagic implements Runnable{
 		}
 	}
 
+	public GraphicMagic(String title) {
+		this.title = title;
+	}
+
 	public void addPanel(Panel p){
 		synchronized (panels) {
 			panels.add(p);
@@ -67,7 +72,7 @@ public class GraphicMagic implements Runnable{
 		System.out.println("Hello LWJGL " + Sys.getVersion() + "!");
 
 		try {
-			init(300, 300);
+			init(1200, 800, title);
 			loop();
 
 			// Release window and window callbacks
@@ -80,7 +85,7 @@ public class GraphicMagic implements Runnable{
 		}
 	}
 
-	private void init(int width, int height) {
+	private void init(int width, int height, String title) {
 		// Setup an error callback. The default implementation
 		// will print the error message in System.err.
 		GLFW.glfwSetErrorCallback(errorCallback = Callbacks.errorCallbackPrint(System.err));
@@ -95,7 +100,7 @@ public class GraphicMagic implements Runnable{
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GL11.GL_TRUE); // the window will be resizable
 
 		// Create the window
-		window = GLFW.glfwCreateWindow(width, height, "Hello World!", MemoryUtil.NULL, MemoryUtil.NULL);
+		window = GLFW.glfwCreateWindow(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
 		if (window == MemoryUtil.NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
 
@@ -177,9 +182,15 @@ public class GraphicMagic implements Runnable{
 
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
+			int s = panels.size();
+			double panelHeight = (top-bottom)/s;
+			double actualBottom = bottom;
+			double actualTop = bottom+panelHeight;
 			synchronized (panels) {
 				for (Panel p: panels){
-					p.draw(left, right, bottom, top);
+					p.draw(left, right, actualBottom, actualTop);
+					actualBottom = actualTop;
+					actualTop+=panelHeight;
 				}
 			}
 

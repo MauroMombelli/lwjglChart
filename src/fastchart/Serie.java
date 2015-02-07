@@ -12,8 +12,8 @@ public class Serie {
 	 */
 	private final LinkedList<Point2D> list = new LinkedList<Point2D>();
 	
-	public Number minY = 0;
-	public Number maxY = 0;
+	public double minY = Double.MAX_VALUE;
+	public double maxY = Double.MIN_VALUE;
 
 	private double[] lineColor = new double[] { 1.0, 1.0, 1.0 };
 
@@ -22,11 +22,11 @@ public class Serie {
 	public void addPoint(Point2D p){
 		synchronized (this) {
 			if (p != null){
-				if ( p.getY() > maxY.doubleValue() ){
+				if ( p.getY() > maxY ){
 					maxY = p.getY();
 				}
 				
-				if ( p.getY() < minY.doubleValue() ){
+				if ( p.getY() < minY ){
 					minY = p.getY();
 				}
 				list.addFirst(p);
@@ -50,7 +50,7 @@ public class Serie {
 		return list.size();
 	}
 	
-	public void setLineColor(int r, int g, int b) {
+	public void setLineColor(double r, double g, double b) {
 		lineColor[0] = r;
 		lineColor[1] = g;
 		lineColor[2] = b;
