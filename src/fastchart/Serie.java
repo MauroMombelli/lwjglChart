@@ -1,5 +1,6 @@
 package fastchart;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
 
@@ -15,7 +16,7 @@ public class Serie {
 	public double minY = Double.MAX_VALUE;
 	public double maxY = Double.MIN_VALUE;
 
-	private double[] lineColor = new double[] { 1.0, 1.0, 1.0 };
+	private Color lineColor = Color.black;
 
 	private double scaleY = 1;
 	
@@ -54,13 +55,15 @@ public class Serie {
 		return list.size();
 	}
 	
-	public void setLineColor(double r, double g, double b) {
-		lineColor[0] = r;
-		lineColor[1] = g;
-		lineColor[2] = b;
+	public void setLineColor(float r, float g, float b) {
+		lineColor = new Color(r, g, b);
+	}
+	
+	public void setLineColor(Color color) {
+		lineColor = color;
 	}
 
-	public double[] getLineColor() {
+	public Color getLineColor() {
 		return lineColor;
 	}
 

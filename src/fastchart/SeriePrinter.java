@@ -1,5 +1,6 @@
 package fastchart;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import org.lwjgl.opengl.GL11;
@@ -46,8 +47,8 @@ public class SeriePrinter {
 			return;
 		}
 
-		double[] lineColor2 = s.getLineColor();
-		GL11.glColor3d(lineColor2[0], lineColor2[1], lineColor2[2]);
+		Color lineColor2 = s.getLineColor();
+		GL11.glColor3d(lineColor2.getRed(), lineColor2.getGreen(), lineColor2.getBlue());
 
 		double incrementX = (maxX - minX) / (numToDraw - 1);
 		double actualX = maxX;
