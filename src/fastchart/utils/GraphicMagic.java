@@ -28,6 +28,8 @@ public class GraphicMagic implements Runnable{
 	
 	List<Panel> panels = new ArrayList<>();
 	private String title;
+	private int height;
+	private int width;
 
 	static {
 
@@ -57,8 +59,10 @@ public class GraphicMagic implements Runnable{
 		}
 	}
 
-	public GraphicMagic(String title) {
+	public GraphicMagic(String title, int width, int height) {
 		this.title = title;
+		this.width = width;
+		this.height = height;
 	}
 
 	public void addPanel(Panel p){
@@ -72,7 +76,7 @@ public class GraphicMagic implements Runnable{
 		System.out.println("Hello LWJGL " + Sys.getVersion() + "!");
 
 		try {
-			init(1200, 800, title);
+			init(width, height, title);
 			loop();
 
 			// Release window and window callbacks

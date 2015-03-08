@@ -28,4 +28,8 @@ public class PlainObject implements Panel{
 		requestRAMMesh.rotation = euler;
 	}
 
+	public void setRotationMatrix(double[] matrix) {
+		requestRAMMesh.rotation = matrix;
+	}
+
 }

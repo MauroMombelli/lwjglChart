@@ -17,7 +17,11 @@ public class Serie {
 
 	private double[] lineColor = new double[] { 1.0, 1.0, 1.0 };
 
-	private double scaleY = 1.0/32768.0;
+	private double scaleY = 1;
+	
+	public Serie(double scaleY){
+		this.scaleY = scaleY;
+	}
 	
 	public void addPoint(Point2D p){
 		synchronized (this) {

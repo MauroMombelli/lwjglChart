@@ -1,7 +1,9 @@
 package fastchart.objLoader;
 
+import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 public class RAMRenderable extends GameRenderable {
@@ -27,10 +29,16 @@ public class RAMRenderable extends GameRenderable {
 
 		verticesBuffer.rewind();
 
-		
-		GL11.glRotated(Math.toDegrees(rotation[0]), 1.0, 0.0, 0.0);
-		GL11.glRotated(Math.toDegrees(rotation[1]), 0.0, 1.0, 0.0);
-		GL11.glRotated(Math.toDegrees(rotation[2]), 0.0, 0.0, 1.0);
+		if (rotation.length == 3){
+			GL11.glRotated(Math.toDegrees(rotation[1]), 0.0, 1.0, 0.0);
+			GL11.glRotated(Math.toDegrees(rotation[2]), 0.0, 0.0, 1.0);
+			GL11.glRotated(Math.toDegrees(rotation[0]), 1.0, 0.0, 0.0);
+		}else if (rotation.length == 16){
+			DoubleBuffer b = BufferUtils.createDoubleBuffer(16);
+			b.put(rotation);
+			b.flip();
+			GL11.glMultMatrix( b );
+		}
 		
 		GL11.glTranslated(transform[0], transform[1], transform[2]);
 		
@@ -47,7 +55,6 @@ public class RAMRenderable extends GameRenderable {
 		GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
 		GL11.glDisableClientState(GL11.GL_NORMAL_ARRAY);
 
-		
 		GL11.glPopMatrix();
 
 	}

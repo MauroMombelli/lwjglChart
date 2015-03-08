@@ -55,7 +55,7 @@ public class SeriePrinter {
 		double midY = (maxY + minY) / 2.0;
 
 		
-		double scaleFactorByChartCompressionPile = Math.abs(maxY+minY)/2;
+		double scaleFactorByChartCompressionPile = (Math.abs(maxY)+Math.abs(minY))/2;
 		
 		double scaleY = s.getScaleY()*scaleFactorByChartCompressionPile;
 		//1/(s.maxY+s.minY);
